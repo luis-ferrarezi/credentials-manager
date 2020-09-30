@@ -1,4 +1,5 @@
 from cryptography.fernet import Fernet
+import json
 
 cred_filename = 'CredFile.ini'
 key_file = 'key.key'
@@ -27,6 +28,7 @@ with open(cred_filename, 'r') as cred_in:
                     'Password': dict_creds_temp['Password']
                 }
     print(dict_local)
-
+    with open('data.json', 'w') as outfile:
+        json.dump(dict_local, outfile)
     passwd = f.decrypt(dict_creds_temp['Password'].encode()).decode()
     print("Password:", passwd)

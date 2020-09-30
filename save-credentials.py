@@ -3,6 +3,12 @@ import ctypes
 import os
 import time
 import sys
+import json
+
+
+def write_json(data, filename='data.json'):
+    with open(filename, 'w') as f:
+        json.dump(data, f, indent=4)
 
 
 def create_key(file_mode='w'):
@@ -60,34 +66,27 @@ class Credentials:
 
     @password.setter
     def password(self, password):
-        print(self.__key)
         f = Fernet(self.__key)
         self.__password = f.encrypt(password.encode()).decode()
         del f
 
-    def create_cred(self):
-        cred_filename = 'CredFile.ini'
+    def save_to_json(self):
+        cred_filename = 'dataTeste.json'
 
-        with open(cred_filename, 'a') as file_in:
-            file_in.write("Local={}\nUsername={}\nPassword={}\n"
-                          .format(self.__local, self.__username, self.__password))
-            file_in.write("++" * 20 + "\n")
+        with open(cred_filename, 'r') as outfile:
+            new_data = json.load(outfile)
+
+        new_data[self.local] = {
+            'login': self.__username,
+            'password': self.__password
+        }
+        with open(cred_filename, 'w') as gravar:
+            json.dump(new_data, gravar)
 
 
 # TODO tinha todos itens aqui
+# TODO salvar em .json
 
-# TODO colocar para salvar o local tbm no CredFile
-# TODO ajustar para manusear tudo como dicionário de dicionários
-#  {
-#        'LOCALX':{
-#         User: Y,
-#         Senha: Z
-#         },
-#        'LocalX2':{
-#         User: Y2,
-#         Senha: Z2
-#         }
-#  }
 
 def main():
     # Creating an object for Credentials class
@@ -98,12 +97,10 @@ def main():
     creds.username = input("Enter UserName:")
     creds.password = input("Enter Password:")
 
-    # calling the Credit
-    creds.create_cred()
+    creds.save_to_json()
     print("**" * 20)
     print("Cred file created successfully at {}"
           .format(time.ctime()))
-
     print("**" * 20)
 
 
