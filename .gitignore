@@ -3,5 +3,5 @@
 /workspace.xml
 venv/
 key.key
-.json
-.ini
+*.json
+*.ini
