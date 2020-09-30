@@ -4,6 +4,7 @@ import json
 cred_filename = 'credentials.json'
 key_file = 'key.key'
 
+
 with open(cred_filename, 'r') as data_json:
     data = json.load(data_json)
 
@@ -21,21 +22,37 @@ def decrypt_password(local):
     return password
 
 
-def read_username(local):
+def read_login(local):
     return data[local]['login']
 
-#TODO adicionar um 'check_local'
-#TODO levar o read e decryp para as property
-#TODO utilizando o 'check_local' antes deles
+
+# TODO adicionar um 'check_local'
+# TODO levar o read e decryp para as property
+# TODO utilizando o 'check_local' antes deles
+
+
 class ShowCredentials(object):
     def __init__(self, local):
-        self.__username = read_username(local)
-        self.__password = decrypt_password(local)
-
+        self.local = local
+        self.msgKeyError = local + ' not available, use .check_locals'
+        if self.local not in data:
+            print(self.msgKeyError)
     @property
-    def username(self):
-        return self.__username
+    def login(self):
+        try:
+            return read_login(self.local)
+        except KeyError:
+            print(self.msgKeyError)
 
     @property
     def password(self):
-        return self.__password
+        try:
+            return decrypt_password(self.local)
+        except KeyError:
+            print(self.msgKeyError)
+
+    @property
+    def check_locals(self):
+        return data.keys()
+
+# verificar users de um local → 'esse local contém 0 login'

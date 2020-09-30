@@ -1,5 +1,5 @@
 from read_credentials import ShowCredentials
 
-teste = ShowCredentials('Studeo')
-print(teste.username)
-print(teste.password)
+nomeruim = ShowCredentials('Studeos')
+print(nomeruim.login)
+print(nomeruim.password)
