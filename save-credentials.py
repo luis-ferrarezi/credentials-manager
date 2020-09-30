@@ -6,11 +6,6 @@ import sys
 import json
 
 
-def write_json(data, filename='data.json'):
-    with open(filename, 'w') as f:
-        json.dump(data, f, indent=4)
-
-
 def create_key(file_mode='w'):
     file_name = 'key.key'
     with open(file_name, file_mode) as key_in:
@@ -71,21 +66,19 @@ class Credentials:
         del f
 
     def save_to_json(self):
-        cred_filename = 'dataTeste.json'
+        cred_filename = 'credentials.json'
+        data = {}
+        if os.path.exists(cred_filename):
+            with open(cred_filename, 'r') as old_file:
+                data = json.load(old_file)
 
-        with open(cred_filename, 'r') as outfile:
-            new_data = json.load(outfile)
-
-        new_data[self.local] = {
+        data[self.local] = {
             'login': self.__username,
             'password': self.__password
         }
-        with open(cred_filename, 'w') as gravar:
-            json.dump(new_data, gravar)
 
-
-# TODO tinha todos itens aqui
-# TODO salvar em .json
+        with open(cred_filename, 'w') as save_file:
+            json.dump(data, save_file, indent=4)
 
 
 def main():
